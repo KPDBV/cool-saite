@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css.css">
+</head>
+<body>
+
+<h2>diddy rizz</h2>
+ <div class="navbar">
+    <div class ="center">
+    <h2>  RIZO </h2>
+    </div>    
+  <li><a href="1.html">Home</a></li>
+  <li><a href="2.html">News</a></li>
+  <li><a href="3.html">Contact</a></li>
+  <li><a href="4.html">terms</a></li>
+
+  <hr>
+ 
+  <li><a href="5.html">MEME</a></li>
+  <li><a href="6.html">PORN</a></li>
+  <li><a href="7.html">AI PROMTS</a></li>
+  <li><a href="8.html">GAMES</a></li>
+</div>
+
+
+
+
+<div class="content">
+    <h1>HELLO</h1>
+
+
+
+  <h1>Latest News</h1>
+
+  <button onclick="loadNews()">Refresh News</button>
+
+  <div id="news"></div>
+
+</div>
+
+<script>
+async function loadNews() {
+  const container = document.getElementById("news");
+  container.innerHTML = "Loading...";
+
+  const url = "https://api.gdeltproject.org/api/v2/doc/doc?query=world&mode=ArtList&format=json";
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const articles = data.articles.slice(0, 10);
+
+    container.innerHTML = "";
+
+    articles.forEach(article => {
+      const div = document.createElement("div");
+
+      div.innerHTML = `
+        <h3>${article.title}</h3>
+        <p>${article.sourceCountry || "Unknown source"}</p>
+        <a href="${article.url}" target="_blank">Read more</a>
+        <hr>
+      `;
+
+      container.appendChild(div);
+    });
+
+  } catch (e) {
+    container.innerHTML = "Failed to load news.";
+  }
+}
+
+loadNews();
+</script>
+
+
+
+
+
+
+
+</div>
+
+
+</body>
+</html>

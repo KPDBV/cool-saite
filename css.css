@@ -1,0 +1,102 @@
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #f1f1f1;
+}
+
+li a {
+  display: block;
+  color: black;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+/* Change the link and background color on hover */
+li a:hover {
+  background-color: #fff598;
+  color: white;
+}
+
+.notice {
+    background: #fef9e7;
+    border: 1px solid #f4a800;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-family: sans-serif;
+    font-size: 12px;
+    border-radius: 0;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    clear: both;
+  }
+
+  .WARNING {
+    background: #ff7777;
+    border: 1px solid #ff0000;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-family: sans-serif;
+    font-size: 12px;
+    border-radius: 0;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    clear: both;
+  }
+
+    .content {
+      margin-left: 220px;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .navbar {
+      outline: thick ridge pink;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 220px;
+      background-color: #fcffcc;
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+    }
+
+    .center {
+      text-align: center
+    }
+
+    .contacts-box {
+    width: 400px;
+    margin: 50px auto;
+    padding: 15px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.contacts-box h1 {
+    text-align: center;
+    color: darkblue;
+}
+
+.contacts-box p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.contacts-box hr {
+    margin: 15px 0;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* space between links */
+}

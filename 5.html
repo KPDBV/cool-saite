@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css.css">
+</head>
+<body>
+
+<h2>diddy rizz</h2>
+ <div class="navbar">
+    <div class ="center">
+    <h2>  RIZO </h2>
+    </div>    
+  <li><a href="1.html">Home</a></li>
+  <li><a href="2.html">News</a></li>
+  <li><a href="3.html">Contact</a></li>
+  <li><a href="4.html">terms</a></li>
+
+  <hr>
+ 
+  <li><a href="5.html">MEME</a></li>
+  <li><a href="6.html">PORN</a></li>
+  <li><a href="7.html">AI PROMTS</a></li>
+  <li><a href="8.html">GAMES</a></li>
+</div>
+
+
+
+
+<div class="content">
+    <h1>skibidi</h1>
+
+    <h2>MEME FEED</h2>
+  </div>
+</div>
+
+<div class="content">
+
+
+  <button onclick="loadMemes()">Reload Memes</button>
+
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+async function loadMemes() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  // public meme API
+  const res = await fetch("https://api.imgflip.com/get_memes");
+  const data = await res.json();
+
+  const memes = data.data.memes;
+
+  // shuffle + pick 12 random memes
+  memes.sort(() => Math.random() - 0.5);
+
+  memes.slice(0, 12).forEach(meme => {
+    const div = document.createElement("div");
+    div.className = "meme";
+
+    div.innerHTML = `
+      <img src="${meme.url}">
+      <p style="font-size:12px;">${meme.name}</p>
+    `;
+
+    grid.appendChild(div);
+  });
+}
+
+loadMemes();
+</script>
+
+
+
+
+
+
+
+</div>
+
+
+</body>
+</html>

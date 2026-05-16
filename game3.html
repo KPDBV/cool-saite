@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css.css">
+</head>
+<body>
+
+<h2>diddy rizz</h2>
+ <div class="navbar">
+    <div class ="center">
+    <h2>  RIZO </h2>
+    </div>    
+  <li><a href="1.html">Home</a></li>
+  <li><a href="2.html">News</a></li>
+  <li><a href="3.html">Contact</a></li>
+  <li><a href="4.html">terms</a></li>
+
+  <hr>
+ 
+  <li><a href="5.html">MEME</a></li>
+  <li><a href="6.html">PORN</a></li>
+  <li><a href="7.html">AI PROMTS</a></li>
+  <li><a href="8.html">GAMES</a></li>
+</div>
+
+
+
+
+<div class="content">
+    <h1>FLICK TRAINER</h1>
+<li><a href="8.html">BACK</a></li>
+    <canvas id="c" width="800" height="500"></canvas>
+
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+// images
+const imgs = ["b1.png","b2.png","b3.png","b4.png"].map(s => {
+  const i = new Image();
+  i.src = s;
+  return i;
+});
+
+const bg = new Image();
+bg.src = "b5.png";
+
+let state = "waiting"; // waiting | ready | clicked | tooSoon
+let startTime = 0;
+let reaction = 0;
+
+let target = {
+  x: 350,
+  y: 200,
+  size: 100,
+  img: 0
+};
+
+let timeout = null;
+
+function reset() {
+  state = "waiting";
+  reaction = 0;
+
+  clearTimeout(timeout);
+
+  timeout = setTimeout(() => {
+    state = "ready";
+    startTime = Date.now();
+
+    target.x = Math.random() * (canvas.width - 100);
+    target.y = Math.random() * (canvas.height - 100);
+    target.img = Math.floor(Math.random() * imgs.length);
+
+  }, 1000 + Math.random() * 3000);
+}
+
+canvas.addEventListener("click", () => {
+
+  if (state === "waiting") {
+    state = "tooSoon";
+    clearTimeout(timeout);
+    setTimeout(reset, 1000);
+  }
+
+  else if (state === "ready") {
+    reaction = Date.now() - startTime;
+    state = "clicked";
+    setTimeout(reset, 1500);
+  }
+
+  else if (state === "clicked" || state === "tooSoon") {
+    reset();
+  }
+});
+
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if (bg.complete) {
+    ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+  }
+
+  ctx.fillStyle = "black";
+  ctx.fillText("Reaction Time Game", 10, 20);
+
+  if (state === "waiting") {
+    ctx.fillText("Wait for green target...", 10, 50);
+  }
+
+  if (state === "ready") {
+    const img = imgs[target.img];
+    if (img.complete) {
+      ctx.drawImage(img, target.x, target.y, target.size, target.size);
+    }
+    ctx.fillText("CLICK NOW!", 10, 50);
+  }
+
+  if (state === "clicked") {
+    ctx.fillText("Reaction: " + reaction + " ms", 10, 50);
+  }
+
+  if (state === "tooSoon") {
+    ctx.fillText("Too soon! Wait for the target.", 10, 50);
+  }
+
+  requestAnimationFrame(draw);
+}
+
+reset();
+draw();
+</script>
+
+
+</div>
+
+
+</body>
+</html>

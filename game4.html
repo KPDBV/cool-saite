@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css.css">
+</head>
+<body>
+
+<h2>diddy rizz</h2>
+ <div class="navbar">
+    <div class ="center">
+    <h2>  RIZO </h2>
+    </div>    
+  <li><a href="1.html">Home</a></li>
+  <li><a href="2.html">News</a></li>
+  <li><a href="3.html">Contact</a></li>
+  <li><a href="4.html">terms</a></li>
+
+  <hr>
+ 
+  <li><a href="5.html">MEME</a></li>
+  <li><a href="6.html">PORN</a></li>
+  <li><a href="7.html">AI PROMTS</a></li>
+  <li><a href="8.html">GAMES</a></li>
+</div>
+
+
+
+
+<div class="content">
+    <h1>DVD BOUNCE</h1>
+    <li><a href="8.html">BACK</a></li>
+    <canvas id="c" width="800" height="500"></canvas>
+
+<script>
+const c = document.getElementById("c");
+const ctx = c.getContext("2d");
+
+// background
+const bg = new Image();
+bg.src = "b5.png";
+
+// dvd images
+const imgs = ["b1.png","b2.png","b3.png","b4.png"].map(src => {
+  const i = new Image();
+  i.src = src;
+  return i;
+});
+
+let imgIndex = Math.floor(Math.random() * imgs.length);
+
+let x = 100;
+let y = 100;
+let vx = 3;
+let vy = 2;
+
+const size = 120;
+let hits = 0;
+
+function loop() {
+  ctx.clearRect(0, 0, c.width, c.height);
+
+  // draw bg
+  if (bg.complete) {
+    ctx.drawImage(bg, 0, 0, c.width, c.height);
+  }
+
+  x += vx;
+  y += vy;
+
+  let bounced = false;
+
+  if (x <= 0 || x + size >= c.width) {
+    vx *= -1;
+    bounced = true;
+  }
+
+  if (y <= 0 || y + size >= c.height) {
+    vy *= -1;
+    bounced = true;
+  }
+
+  if (bounced) {
+    hits++;
+    imgIndex = Math.floor(Math.random() * imgs.length);
+  }
+
+  const img = imgs[imgIndex];
+  if (img.complete) {
+    ctx.drawImage(img, x, y, size, size);
+  }
+
+  ctx.fillStyle = "black";
+  ctx.fillText("Hits: " + hits, 10, 20);
+
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+
+
+</div>
+
+
+</body>
+</html>
