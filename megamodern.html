@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RIZO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0a0b;
+      --surface:  #111114;
+      --border:   rgba(255,255,255,0.07);
+      --gold:     #c9a96e;
+      --gold-dim: #7a6240;
+      --white:    #f0ede8;
+      --muted:    #6b6860;
+      --sidebar-w: 240px;
+      --ease: cubic-bezier(.22,.8,.28,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: .03;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 48px 32px;
+      z-index: 100;
+      overflow: hidden;
+    }
+
+    /* subtle radial glow behind logo */
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(201,169,110,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 2.4rem;
+      letter-spacing: .3em;
+      color: var(--gold);
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 56px;
+      animation: fadeDown .8s var(--ease) both;
+    }
+
+    nav { flex: 1; }
+
+    nav ul { list-style: none; }
+
+    nav ul li {
+      opacity: 0;
+      animation: fadeRight .6s var(--ease) forwards;
+    }
+    nav ul li:nth-child(1) { animation-delay:.15s }
+    nav ul li:nth-child(2) { animation-delay:.22s }
+    nav ul li:nth-child(3) { animation-delay:.29s }
+    nav ul li:nth-child(4) { animation-delay:.36s }
+    nav ul li:nth-child(5) { animation-delay:.50s }
+    nav ul li:nth-child(6) { animation-delay:.57s }
+    nav ul li:nth-child(7) { animation-delay:.64s }
+
+    nav a {
+      display: block;
+      padding: 10px 0;
+      font-size: .78rem;
+      font-weight: 400;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      transition: color .3s;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 8px;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width .35s var(--ease);
+    }
+
+    nav a:hover { color: var(--white); }
+    nav a:hover::after { width: 100%; }
+
+    .nav-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 20px 0;
+      opacity: 0;
+      animation: fadeRight .6s var(--ease) .44s forwards;
+    }
+
+    /* section labels */
+    .nav-label {
+      font-size: .6rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 4px;
+      padding-top: 4px;
+      font-weight: 500;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      padding: 80px 80px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,169,110,.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 50% at 20% 80%, rgba(201,169,110,.04) 0%, transparent 50%),
+        linear-gradient(160deg, #0f0f12 0%, #0a0a0b 100%);
+    }
+
+    /* big decorative letter */
+    .hero-deco {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -56%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(260px, 35vw, 480px);
+      font-weight: 300;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(201,169,110,.08);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      animation: slowDrift 20s ease-in-out infinite alternate;
+    }
+
+    .hero-line {
+      position: absolute;
+      top: 0; right: 120px;
+      width: 1px;
+      height: 0;
+      background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+      animation: growLine 1.2s var(--ease) .4s forwards;
+    }
+
+    .hero-content { position: relative; z-index: 2; max-width: 620px; }
+
+    .hero-eyebrow {
+      font-size: .68rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp .7s var(--ease) .5s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 7vw, 96px);
+      font-weight: 300;
+      line-height: 1.02;
+      letter-spacing: -.01em;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp .8s var(--ease) .65s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      margin-top: 28px;
+      font-size: .88rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 400px;
+      opacity: 0;
+      animation: fadeUp .7s var(--ease) .8s forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 44px;
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      opacity: 0;
+      animation: fadeUp .7s var(--ease) .95s forwards;
+      transition: gap .3s;
+    }
+    .hero-cta:hover { gap: 22px; }
+    .hero-cta::after {
+      content: '→';
+      font-size: 1rem;
+    }
+
+    /* ── CARDS SECTION ── */
+    .section {
+      padding: 120px 80px;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 32px;
+      margin-bottom: 64px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 300;
+      color: var(--white);
+    }
+
+    .section-num {
+      font-size: .68rem;
+      letter-spacing: .25em;
+      color: var(--gold-dim);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .card {
+      background: var(--surface);
+      padding: 48px 36px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: border-color .4s, transform .4s var(--ease);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201,169,110,.06) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity .4s;
+    }
+
+    .card:hover { border-color: rgba(201,169,110,.25); transform: translateY(-4px); }
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      width: 36px; height: 36px;
+      border: 1px solid var(--gold-dim);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 28px;
+      font-size: .9rem;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+
+    .card-body {
+      font-size: .8rem;
+      line-height: 1.85;
+      color: var(--muted);
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 22px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-track {
+      display: inline-block;
+      animation: marquee 18s linear infinite;
+    }
+
+    .marquee-track span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: .05em;
+      padding: 0 40px;
+    }
+
+    .marquee-track span.dot {
+      font-style: normal;
+      color: var(--gold);
+      font-size: .5rem;
+      vertical-align: middle;
+      padding: 0 4px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      letter-spacing: .3em;
+      color: var(--gold-dim);
+    }
+
+    .footer-copy {
+      font-size: .68rem;
+      letter-spacing: .1em;
+      color: var(--muted);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeRight {
+      from { opacity: 0; transform: translateX(-12px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes growLine {
+      from { height: 0; opacity: 0; }
+      to   { height: 100vh; opacity: 1; }
+    }
+    @keyframes slowDrift {
+      from { transform: translate(-50%, -56%) scale(1); }
+      to   { transform: translate(-50%, -52%) scale(1.04); }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { transform: translateX(-100%); }
+      .cards { grid-template-columns: 1fr; }
+      .section { padding: 80px 32px; }
+      .hero { padding: 60px 32px; }
+      .footer { flex-direction: column; gap: 16px; padding: 40px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="logo">Rizo</div>
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="2.html">News</a></li>
+        <li><a href="3.html">Contact</a></li>
+        <li><a href="4.html">Terms</a></li>
+
+        <hr class="nav-divider">
+
+        <li>
+          <div class="nav-label">Explore</div>
+        </li>
+        <li><a href="5.html">Meme</a></li>
+        <li><a href="6.html">Adult</a></li>
+        <li><a href="8.html">Games</a></li>
+      </ul>
+    </nav>
+
+    <div style="font-size:.6rem;letter-spacing:.12em;color:var(--muted);opacity:.5">
+      © 2026 RIZO
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-deco">R</div>
+      <div class="hero-line"></div>
+
+      <div class="hero-content">
+        <p class="hero-eyebrow">Welcome to Rizo</p>
+        <h1 class="hero-title">
+          Where every<br><em>moment</em><br>matters.
+        </h1>
+        <p class="hero-sub">
+          A curated space for discovery, entertainment, and connection — refined for those who expect more.
+        </p>
+        <a href="2.html" class="hero-cta">Explore now</a>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-wrap">
+      <div class="marquee-track">
+        <span>News</span><span class="dot">◆</span>
+        <span>Games</span><span class="dot">◆</span>
+        <span>Entertainment</span><span class="dot">◆</span>
+        <span>Culture</span><span class="dot">◆</span>
+        <span>Rizo</span><span class="dot">◆</span>
+        <span>Discover</span><span class="dot">◆</span>
+        <span>Connect</span><span class="dot">◆</span>
+        <span>News</span><span class="dot">◆</span>
+        <span>Games</span><span class="dot">◆</span>
+        <span>Entertainment</span><span class="dot">◆</span>
+        <span>Culture</span><span class="dot">◆</span>
+        <span>Rizo</span><span class="dot">◆</span>
+        <span>Discover</span><span class="dot">◆</span>
+        <span>Connect</span><span class="dot">◆</span>
+      </div>
+    </div>
+
+    <!-- CARDS -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">What's inside</h2>
+        <span class="section-num">01 — 03</span>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">✦</div>
+          <h3 class="card-title">Latest News</h3>
+          <p class="card-body">Stay ahead with curated stories, breaking news, and editorial perspectives that cut through the noise.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">◈</div>
+          <h3 class="card-title">Entertainment</h3>
+          <p class="card-body">From viral memes to immersive games — a universe of content handpicked for the curious and bold.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">◇</div>
+          <h3 class="card-title">Get in Touch</h3>
+          <p class="card-body">Ideas, partnerships, or just a hello — our door is always open for those who value real conversation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-logo">RIZO</div>
+      <div class="footer-copy">© 2026 · All rights reserved</div>
+    </footer>
+
+  </main>
+
+</body>
+</html>
